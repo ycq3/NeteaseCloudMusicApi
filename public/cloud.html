@@ -8,6 +8,7 @@
 </head>
 
 <body>
+<input id="api" value="http://netease-cloud-music-api-beta-six-95.vercel.app">
 
 <h1>第一步先登录</h1>
 手机号 <input id="username">
@@ -21,11 +22,13 @@
 <script>
     let phone = document.getElementById('username').value
     let password = document.getElementById('password').value
+    let api = document.getElementById('api').value
     const fileUpdateTime = {}
     let fileLength = 0
     let cookieToken = ''
 
     async function login() {
+        api = document.getElementById('api').value
         phone = document.getElementById('username').value
         password = document.getElementById('password').value
         if (!phone || !password) {
@@ -34,10 +37,11 @@
             throw new Error(msg)
         }
         const res = await axios({
-            url: `/login/cellphone?phone=${phone}&password=${encodeURIComponent(password)}`,
+            url: api + `/login/cellphone?phone=${phone}&password=${encodeURIComponent(password)}`,
             withCredentials: true, //关键
         })
         cookieToken = res.data.cookie
+        main()
     }
 
     function main() {
@@ -59,7 +63,7 @@
         formData.append('songFile', file)
         axios({
             method: 'post',
-            url: `/cloud?time=${Date.now()}&cookie=${cookieToken}`,
+            url: api + `/cloud?time=${Date.now()}&cookie=${cookieToken}`,
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -89,4 +93,3 @@
 </body>
 
 </html>
-
